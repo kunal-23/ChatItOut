@@ -1,0 +1,12 @@
+{
+    "appId": "08a5eff7-b781-493a-a47e-da90b57edb23",
+    "appSecret": "g268Q~AuuV9.6NwJCclkcMS6BQMxacIwD1yE2aZR",
+    "existingAppServicePlanName": "chatitlang-serverfarm-eb74c8",
+    "existingAppServicePlanLocation": "eastus",
+    "newAppServicePlanName": "",
+    "newAppServicePlanLocation": "",
+    "UMSIName": "",
+    "UMSIResourceGroupName": "",
+    "newAppServicePlanSku": "",
+    "tenantId": ""
+}

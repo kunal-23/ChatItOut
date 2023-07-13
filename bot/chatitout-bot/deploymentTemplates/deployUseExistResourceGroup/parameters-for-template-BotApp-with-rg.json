@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "appServiceName": {
-      "value": ""
+      "value": "chatitmakeitout"
     },
     "existingAppServicePlanName": {
       "value": ""
@@ -12,28 +12,28 @@
       "value": ""
     },
     "newAppServicePlanName": {
-      "value": ""
+      "value": "chatitmakeitout"
     },
     "newAppServicePlanLocation": {
-      "value": ""
+      "value": "eastus"
     },
     "newAppServicePlanSku": {
       "value": {
-        "name": "S1",
-        "tier": "Standard",
-        "size": "S1",
-        "family": "S",
-        "capacity": 1
+        "name": "F0",
+        "tier": "Free",
+        "size": "F0",
+        "family": "F",
+        "capacity": 4
       }
     },
     "appType": {
       "value": "MultiTenant"
     },
     "appId": {
-      "value": ""
+      "value": "08a5eff7-b781-493a-a47e-da90b57edb23"
     },
     "appSecret": {
-      "value": ""
+      "value": "g268Q~AuuV9.6NwJCclkcMS6BQMxacIwD1yE2aZR"
     },
     "UMSIName": {
       "value": ""

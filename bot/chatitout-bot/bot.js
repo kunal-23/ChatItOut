@@ -2,7 +2,9 @@
 // Licensed under the MIT License.
 
 const { ActivityHandler, MessageFactory } = require('botbuilder');
-const {MainDialog} = require('./dialogs/jiraDialog')
+const {JIRADialog} = require('./dialogs/jiraDialog')
+const {GITHUBDialog} = require('./dialogs/githubDialog')
+const {ServiceNowDialog} = require('./dialogs/serviceNowDialog')
 
 class EchoBot extends ActivityHandler 
 {
@@ -13,12 +15,15 @@ class EchoBot extends ActivityHandler
         this.conversationState = conversationState
         this.userState = userState
         this.dialogState = conversationState.createProperty('dialogstate')
-        this.jiraStatusDialog = new MainDialog(this.conversationState,this.userState)
+        this.jiraStatusDialog = new JIRADialog(this.conversationState,this.userState)
+        this.githubStatusDialog = new GITHUBDialog(this.conversationState,this.userState)
+        this.serviceNowStatusDialog = new ServiceNowDialog(this.conversationState,this.userState)
 
         this.previousIntent = this.conversationState.createProperty("previousIntent")
         this.conversationData = this.conversationState.createProperty("conversationData")
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         this.onMessage(async (context, next) => {
+            console.log("in message dialoggg--->",this.conversationData.endDialog)
             await this.dispatchKunal(context);
             // By calling next() you ensure that the next BotHandler is run.
             await next();
@@ -62,7 +67,7 @@ class EchoBot extends ActivityHandler
     }
 
     async sendSuggestedActions(context){
-      var reply = MessageFactory.suggestedActions(['JIRA','Outlook','ServiceNow'],'Hi, choose one of them')
+      var reply = MessageFactory.suggestedActions(['JIRA','GITHUB','ServiceNow'],'Hi, choose one of them')
       await context.sendActivity(reply);
     }
 
@@ -91,6 +96,9 @@ class EchoBot extends ActivityHandler
       const previousIntent = await this.previousIntent.get(context,{})
       const conversationData = await this.conversationData.get(context,{})
 
+      console.log("previousintent",previousIntent)
+      console.log("conversationData",conversationData)
+
       if(previousIntent.intentName && conversationData.endDialog === false){
         console.log('intent2--->',currentIntent)
         currentIntent = previousIntent.intentName;
@@ -108,8 +116,10 @@ class EchoBot extends ActivityHandler
         currentIntent = context.activity.text;
         console.log('intent7--->',currentIntent)
         await this.previousIntent.set(context,{intentName: context.activity.text});
+       
 
       }
+     
       switch(currentIntent){
         
         case 'JIRA':
@@ -117,11 +127,38 @@ class EchoBot extends ActivityHandler
           await this.conversationData.set(context,{endDialog: false})
           await this.jiraStatusDialog.run(context,this.dialogState)
           conversationData.endDialog = await this.jiraStatusDialog.isDialogComplete()
+          console.log("dialoggg-->",conversationData.endDialog)
+          
           if(conversationData.endDialog){
+            await this.conversationData.set(context,{endDialog: true})
             await this.sendSuggestedActions(context)
 
           }
           break;
+          case 'GITHUB':
+            console.log('intent8--->',currentIntent)
+            await this.conversationData.set(context,{endDialog: false})
+            await this.githubStatusDialog.run(context,this.dialogState)
+            conversationData.endDialog = await this.githubStatusDialo.isDialogComplete()
+            
+            if(conversationData.endDialog){
+              await this.conversationData.set(context,{endDialog: true})
+              await this.sendSuggestedActions(context)
+  
+            }
+            break;
+
+            case 'ServiceNow':
+              console.log('intent8--->',currentIntent)
+              await this.conversationData.set(context,{endDialog: false})
+              await this.serviceNowStatusDialog.run(context,this.dialogState)
+              conversationData.endDialog = await this.serviceNowStatusDialog.isDialogComplete()
+              if(conversationData.endDialog){
+                await this.conversationData.set(context,{endDialog: true})
+                await this.sendSuggestedActions(context)
+    
+              }
+              break;
 
       }
       

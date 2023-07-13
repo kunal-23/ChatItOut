@@ -18,9 +18,11 @@
     "dependencies": {
         "botbuilder": "~4.15.0",
         "botbuilder-dialogs": "^4.20.0",
+        "cli-table": "^0.3.11",
         "dotenv": "~8.2.0",
         "node-fetch": "^2.6.12",
-        "restify": "~8.5.1"
+        "restify": "~8.5.1",
+        "table": "^6.8.1"
     },
     "devDependencies": {
         "eslint": "^7.0.0",

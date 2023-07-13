@@ -7,6 +7,11 @@ const {
 } = require('botbuilder-dialogs') 
 
 const fetch = require("node-fetch");
+//let table = require("table");
+let Table = require('cli-table');
+let table = new Table();
+
+let data, config;
  
 
 // v4 
@@ -20,7 +25,7 @@ const MAIN_WATERFALL_DIALOG = "waterfallDialog"
 
  
 
-class MainDialog extends ComponentDialog {
+class JIRADialog extends ComponentDialog {
 
   constructor(conversationState,userState) {
 
@@ -112,14 +117,50 @@ class MainDialog extends ComponentDialog {
             }
               }
             
-              const url = 'https://kannugarg23786.atlassian.net/rest/api/2/issue/CHAT-1';
-              var msg = ''
+              const url = 'https://kannugarg23786.atlassian.net/rest/api/2/search?';
+              var msg = "Story ------------------------- Status"
+              console.log("msgggggg",msg)
+              data = [["Story","Status"]]
+              table.push(['Story', 'Status']);
               try {
-                const response = await fetch(url, options)
+                const response = await fetch(url + new URLSearchParams({
+                  jql: `assignee[displayName]="kunal"`
+              }), options)
                 console.log('response--->',response)
                 const jsonResponse = await response.json();
                 console.log('JSON response', jsonResponse);
-                msg = `your jira status${jsonResponse.key }`
+                console.log('JSON response-->', jsonResponse.issues.length);
+                for(let i=0; i<jsonResponse.issues.length; i++){
+                  msg =msg + `\n\n ${jsonResponse.issues[i].fields.summary} ----------------------- ${jsonResponse.issues[i].fields.status.name}`               
+                }
+                // console.log("data--->",table)
+                // console.log("data--->",table.toString())
+                // config = { 
+                //   columns: {
+                //     0: {
+                //       width: 14 // Column 0 of width 1
+                //     },
+                //     1: {
+                //       width: 14  // Column 1 of width 20
+                //     }
+                //   },
+                  
+                // };
+                // //let x = table.table(data, config);
+                // //console.log(x)
+                // //msg =table
+                // const stringifyTable = (table) => {
+                //   const lines = table.split('\n');
+                //   const dataLines = lines.slice(2, -1);
+                //   return dataLines.join('\n');
+                // };
+                
+                // // Convert the table to a string and remove width values
+                // const tableString = stringifyTable(table.toString());
+
+                // // Send the table as an activity in the Bot Framework
+                // const replyActivity = { type: 'message', text: tableString };
+               // await stepContext.context.sendActivity(replyActivity);
               } catch(err) {
                 console.log('ERROR', err);
               }
@@ -143,4 +184,4 @@ class MainDialog extends ComponentDialog {
 
 }
 
-module.exports.MainDialog = MainDialog;
+module.exports.JIRADialog = JIRADialog;
